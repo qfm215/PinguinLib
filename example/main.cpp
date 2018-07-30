@@ -16,17 +16,22 @@ int loop(void *data)
     color.g = 0;
     color.b = 0;
     color.a = 255;
-    for( int x = 0; x < 800; ++x)
+    t_position pos;
+    pos.x = 0;
+    while (pos.x < 800)
     {
-        for (int y = 0; y < 600; ++y)
+        pos.y = 0;
+        while (pos.y < 600)
         {
-            if (x > d->f && x < d->f + 50)
-                d->pix->setPixel(x, y, *color.value);
+            if (pos.x > d->f && pos.x < d->f + 50)
+                d->pix->setPixel(pos, *color.value);
             else
-                d->pix->setPixel(x, y, 0);
-            if (d->f > 100 && x < 20 && y < 20)
-                d->pix->setPixel(x, y, 0);
+                d->pix->setPixel(pos, 0);
+            if (d->f > 100 && pos.x < 20 && pos.y < 20)
+                d->pix->setPixel(pos, 0);
+            pos.y += 1;
         }
+        pos.x += 1;
     }
 
     d->pix->update();
