@@ -10,6 +10,12 @@
 # define EXIT_ON_SUCCESS 1
 # define EXIT_ON_ERROR 2
 
+typedef struct s_position
+{
+    int x;
+    int y;
+} t_position;
+
 typedef struct s_color
 {
     unsigned char r;
@@ -46,14 +52,14 @@ public:
         delete this->texture;
     }
 
-    void setPixel(int x, int y, unsigned int value)
+    void setPixel(t_position pos, unsigned int value)
     {
-        ((unsigned int *)this->pixels)[y * this->width + x] = value;
+        ((unsigned int *)this->pixels)[pos.y * this->width + pos.x] = value;
     }
 
-    unsigned int getPixel(int x, int y)
+    unsigned int getPixel(t_position pos)
     {
-        return (((unsigned int *)this->pixels)[y * this->width + x]);
+        return (((unsigned int *)this->pixels)[pos.y * this->width + pos.x]);
     }
 
     void update()
