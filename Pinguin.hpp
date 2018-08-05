@@ -139,6 +139,7 @@ public:
         sf::Event event;
         bool keys[sf::Keyboard::Return + 1];
         int ret = CONTINUE;
+        int timeBetweenFrame = 1000000 / this->fps;
 
         while (ret == CONTINUE && this->win->isOpen())
         {
@@ -151,7 +152,7 @@ public:
             ret = this->callbackMain(data);
             t1.join();
             ret += this->callbackKey(data, keys);
-            wait = 1000000 / fps + t - (t = time(0) * 1000000);
+            wait = timeBetweenFrame + t - (t = time(0) * 1000000);
             if (wait > 0)
                 usleep(wait);
         }
