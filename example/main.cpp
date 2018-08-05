@@ -9,8 +9,8 @@ typedef struct s_data
 
 int key(void *data, const bool *keys)
 {
-    if (keys[0])
-        printf("key pressed\n");
+    if (keys[sf::Keyboard::A])
+        printf("key A pressed\n");
     return (CONTINUE);
 }
 
