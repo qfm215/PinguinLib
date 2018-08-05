@@ -4,6 +4,8 @@
 # include <iostream>
 # include <ctime>
 # include <unistd.h>
+# include <thread>
+# include <mutex>
 # include <SFML/Graphics.hpp>
 
 # define CONTINUE 0
@@ -112,10 +114,19 @@ private:
     Window *win;
     int fps;
     void *data;
-    int (*callback)(void *);
+    int (*callbackMain)(void *);
+    int (*callbackKey)(void *, const bool *keys);
+
+    void fillKeys(bool *keys)
+    {
+        for (int k = 0; k <= sf::Keyboard::Return; ++k)
+        {
+            keys[k] = sf::Keyboard::isKeyPressed((sf::Keyboard::Key)k);
+        }
+    }
 
 public:
-    Loop(Window *win, int fps, void *data, int (*callback)(void *)) : win(win), fps(fps), data(data), callback(callback)
+    Loop(Window *win, int fps, void *data, int (*callbackMain)(void *), int (*callbackKey)(void *, const bool *)) : win(win), fps(fps), data(data), callbackMain(callbackMain), callbackKey(callbackKey)
     {
     }
 
@@ -125,8 +136,9 @@ public:
     {
         int wait;
         long double t = time(0) * 1000000;
-        int ret = CONTINUE;
         sf::Event event;
+        bool keys[sf::Keyboard::Return + 1];
+        int ret = CONTINUE;
 
         while (ret == CONTINUE && this->win->isOpen())
         {
@@ -135,10 +147,13 @@ public:
                 if (event.type == sf::Event::Closed)
                     this->win->window->close();
             }
+            std::thread t1(&Loop::fillKeys, this, keys);
+            ret = this->callbackMain(data);
+            t1.join();
+            ret += this->callbackKey(data, keys);
             wait = 1000000 / fps + t - (t = time(0) * 1000000);
             if (wait > 0)
                 usleep(wait);
-            ret = this->callback(this->data);
         }
 
         return (ret);

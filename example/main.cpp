@@ -7,6 +7,13 @@ typedef struct s_data
     int f;
 } t_data;
 
+int key(void *data, const bool *keys)
+{
+    if (keys[0])
+        printf("key pressed\n");
+    return (CONTINUE);
+}
+
 int loop(void *data)
 {
     t_data *d = (t_data*)data;
@@ -50,7 +57,7 @@ int main()
 
     d.f = 0;
 
-    Loop l(d.win, 40, &d, &loop);
+    Loop l(d.win, 40, &d, &loop, &key);
     int ret = l.run();
 
     return 0;
