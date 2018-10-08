@@ -19,8 +19,8 @@ int loop(void *data)
     t_data *d = (t_data*)data;
 
     t_color color;
-    color.r = 255;
-    color.g = 0;
+    color.r = 0;
+    color.g = 255;
     color.b = 0;
     color.a = 255;
     t_position pos;
@@ -31,7 +31,7 @@ int loop(void *data)
         while (pos.y < 600)
         {
             if (pos.x > d->f && pos.x < d->f + 50)
-                d->pix->setPixel(pos, *color.value);
+                d->pix->setPixel(pos, color);
             else
                 d->pix->setPixel(pos, 0);
             if (d->f > 100 && pos.x < 20 && pos.y < 20)
@@ -41,7 +41,6 @@ int loop(void *data)
         pos.x += 1;
     }
 
-    d->pix->update();
     d->f = (d->f + 1) % (d->pix->width - 100);
     d->win->display(*d->pix);
 

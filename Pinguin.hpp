@@ -2,8 +2,6 @@
 # define PINGUIN_HPP_
 
 # include <iostream>
-# include <ctime>
-# include <unistd.h>
 # include <thread>
 # include <mutex>
 # include <SFML/Graphics.hpp>
@@ -12,21 +10,23 @@
 # define EXIT_ON_SUCCESS 1
 # define EXIT_ON_ERROR 2
 
+// 2d position structure
 typedef struct s_position
 {
-    int x;
-    int y;
+    unsigned int x;
+    unsigned int y;
 } t_position;
 
+// color structure with red, green, blue and alpha properties
 typedef struct s_color
 {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-    unsigned int *value = (unsigned int *)&r;
+    sf::Uint8 r;
+    sf::Uint8 g;
+    sf::Uint8 b;
+    sf::Uint8 a;
 } t_color;
 
+// class creating an array of uint32 with each element of the array representing the color of one pixel on the final window
 class Pixelarray
 {
 public:
@@ -36,10 +36,11 @@ public:
     sf::Texture *texture;
     sf::Sprite *sprite;
 
+    // constructor
     Pixelarray(int width, int height)
     {
         this->width = width;
-        this->height = width;
+        this->height = height;
         this->pixels = new sf::Uint8[width * height * 4];
 
         this->texture = new sf::Texture();
@@ -47,29 +48,40 @@ public:
         this->sprite = new sf::Sprite(*this->texture);
     }
 
+    // destructor
     ~Pixelarray()
     {
         delete this->pixels;
-        delete this->sprite;
         delete this->texture;
+        delete this->sprite;
     }
 
+    // set color of a pixel at a 2d position in the array from t_color structure
+    void setPixel(t_position pos, t_color value)
+    {
+        ((t_color *)this->pixels)[pos.y * this->width + pos.x] = value;
+    }
+
+    // set color of a pixel at a 2d position in the array from unsigned int
     void setPixel(t_position pos, unsigned int value)
     {
         ((unsigned int *)this->pixels)[pos.y * this->width + pos.x] = value;
     }
 
-    unsigned int getPixel(t_position pos)
+    // get the color of one pixel in the array
+    t_color getPixel(t_position pos)
     {
-        return (((unsigned int *)this->pixels)[pos.y * this->width + pos.x]);
+        return (((t_color *)this->pixels)[pos.y * this->width + pos.x]);
     }
 
+    // call this function before pushing the pixelarray to the window
     void update()
     {
         this->texture->update(this->pixels);
     }
 };
 
+// class creating a sfml window
 class Window
 {
 public:
@@ -77,6 +89,7 @@ public:
     unsigned int width;
     unsigned int height;
 
+    // constructor
     Window(int width, int height, const char *title)
     {
         this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);
@@ -84,30 +97,41 @@ public:
         this->height = height;
     }
 
+    // destructor
     ~Window()
     {
         this->window->close();
         delete this->window;
     }
 
+    // return true if the window is open or false if it is not
     bool isOpen() const
     {
-        return (this->window->isOpen());
+        return this->window->isOpen();
     }
 
-    void getEvent()
-    {
-
-    }
-    
+    // set the pixels of the window from the color values of a pixelarray (reference)
     void display(Pixelarray &pix)
     {
+        std::thread t(&Pixelarray::update, &pix);
         this->window->clear();
+        t.join();
         this->window->draw(*pix.sprite);
+        this->window->display();
+    }
+
+    // set the pixels of the window from the color values of a pixelarray (pointer)
+    void display(Pixelarray *pix)
+    {
+        std::thread t(&Pixelarray::update, pix);
+        this->window->clear();
+        t.join();
+        this->window->draw(*pix->sprite);
         this->window->display();
     }
 };
 
+// class running a display loop updating a window at a specific framerate
 class Loop
 {
 private:
@@ -116,7 +140,8 @@ private:
     void *data;
     int (*callbackMain)(void *);
     int (*callbackKey)(void *, const bool *keys);
-
+    
+    // get the state of keyboard inputs and store it into array
     void fillKeys(bool *keys)
     {
         for (int k = 0; k <= sf::Keyboard::Return; ++k)
@@ -126,22 +151,26 @@ private:
     }
 
 public:
+    // constructor
     Loop(Window *win, int fps, void *data, int (*callbackMain)(void *), int (*callbackKey)(void *, const bool *)) : win(win), fps(fps), data(data), callbackMain(callbackMain), callbackKey(callbackKey)
     {
     }
 
+    // destructor
     ~Loop() = default;
 
+    // display loop calling at each frame a function created by the user
     int run()
     {
-        int wait;
-        long double t = time(0) * 1000000;
         sf::Event event;
-        bool keys[sf::Keyboard::Return + 1];
+        bool *keys = new bool[sf::Keyboard::Return + 1];
         int ret = CONTINUE;
-        int timeBetweenFrame = 1000000 / this->fps;
 
-        while (ret == CONTINUE && this->win->isOpen())
+        sf::Time timeBetweenFrame = sf::microseconds(1000000 / this->fps);
+        sf::Time wait;
+        sf::Clock clock;
+
+        while (ret == CONTINUE && this->win->window->isOpen())
         {
             while (this->win->window->pollEvent(event))
             {
@@ -152,10 +181,13 @@ public:
             ret = this->callbackMain(data);
             t1.join();
             ret += this->callbackKey(data, keys);
-            wait = timeBetweenFrame + t - (t = time(0) * 1000000);
-            if (wait > 0)
-                usleep(wait);
+
+            wait = timeBetweenFrame - clock.getElapsedTime();
+            if (wait > sf::Time::Zero)
+                sf::sleep(wait);
+            clock.restart();
         }
+        delete keys;
 
         return (ret);
     }
