@@ -3,5 +3,5 @@ Ubuntu :    sudo apt install libsfml-dev
 
 
 Inclure Pinguin.hpp dans les .cpp et compiler avec les lignes de compilation suivantes :
-    g++ -c *.cpp
+    g++ -c *.cpp -I{path to Pinguin.hpp}
     g++ *.o -o {appname} -lsfml-graphics -lsfml-window -lsfml-system -pthread
