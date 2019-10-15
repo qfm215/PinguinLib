@@ -1,4 +1,4 @@
-#include "Pinguin.hpp"
+#include "Pinguin.h"
 
 typedef struct s_data
 {
