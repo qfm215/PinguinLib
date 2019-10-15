@@ -12,9 +12,13 @@ OBJ=	Pixelarray.o \
 
 NAME=	libPinguin.so
 
+HEADER=	Pinguin.h
+
 ZSHCFG=		$(HOME)/.zshrc
 
 BASHCFG=	$(HOME)/.bashrc
+
+LIBRARYEXPORT=	export LD_LIBRARY_PATH=$(HOME)/.pinguinlib/lib:$$LD_LIBRARY_PATH
 
 
 all: install clean
@@ -26,13 +30,15 @@ build: compile
 	g++ $(OBJ) -shared -o $(NAME)
 
 install: build
-	$(MKDIR) $(HOME)/.pinguinlib
-	mv $(NAME) $(HOME)/.pinguinlib/
+	$(MKDIR) $(HOME)/.pinguinlib/header
+	$(MKDIR) $(HOME)/.pinguinlib/lib
+	cp $(NAME) $(HOME)/.pinguinlib/lib/
+	cp $(HEADER) $(HOME)/.pinguinlib/header/
 ifneq ($(wildcard $(ZSHCFG)),)
-	grep -qxF 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib:$$LD_LIBRARY_PATH' $(ZSHCFG) || echo 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib:$$LD_LIBRARY_PATH' >> $(ZSHCFG)
+	grep -qxF 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib/lib:$$LD_LIBRARY_PATH' $(ZSHCFG) || echo 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib/lib:$$LD_LIBRARY_PATH' >> $(ZSHCFG)
 endif
 ifneq ($(wildcard $(BASHCFG)),)
-	grep -qxF 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib:$$LD_LIBRARY_PATH' $(BASHCFG) || echo 'export LD_LIBRARY_PATH=$(HOME)/.pinguinlib:$$LD_LIBRARY_PATH' >> $(BASHCFG)
+	grep -qxF '$(LIBRARYEXPORT)' $(BASHCFG) || echo '$(LIBRARYEXPORT)' >> $(BASHCFG)
 endif
 
 clean:
