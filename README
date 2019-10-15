@@ -1,7 +1,8 @@
 Installer la version 2.4.2 de la SFML:
 Ubuntu :    sudo apt install libsfml-dev
 
+Compiler et installer la librairie Pinguin:
+    Exécuter 'make install' à la racine du repo
 
-Inclure Pinguin.hpp dans les .cpp et compiler avec les lignes de compilation suivantes :
-    g++ -c *.cpp -I{path to Pinguin.hpp}
-    g++ *.o -o {appname} -lsfml-graphics -lsfml-window -lsfml-system -pthread
+Compiler l'exemple :
+    g++ -I$HOME/.pinguinlib/header/ -L$HOME/.pinguinlib/lib/ -o {appname} main.cpp -lPinguin -lsfml-graphics -lsfml-window -lsfml-system -pthread
