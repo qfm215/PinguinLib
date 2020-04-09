@@ -5,6 +5,7 @@
 # include <thread>
 # include <mutex>
 # include <SFML/Graphics.hpp>
+#include <X11/Xlib.h>
 
 # define CONTINUE 0
 # define EXIT_ON_SUCCESS 1
@@ -68,7 +69,7 @@ public:
 };
 
 // class creating a sfml window
-class Window
+class RWindow
 {
 public:
     sf::RenderWindow *window;
@@ -76,10 +77,10 @@ public:
     unsigned int height;
 
     // constructor
-    Window(int width, int height, const char *title);
+    RWindow(int width, int height, const char *title);
 
     // destructor
-    ~Window();
+    ~RWindow();
 
     // return true if the window is open or false if it is not
     bool isOpen() const;
@@ -95,18 +96,20 @@ public:
 class Loop
 {
 private:
-    Window *win;
+    RWindow *win;
     int fps;
     void *data;
     int (*callbackMain)(void *);
     int (*callbackKey)(void *, const bool *keys);
-    
+
     // get the state of keyboard inputs and store it into array
     void fillKeys(bool *keys);
+    void mainLoop(int *ret, bool *end);
+    void keyLoop(int *ret, bool *end);
 
 public:
     // constructor
-    Loop(Window *win, int fps, void *data, int (*callbackMain)(void *), int (*callbackKey)(void *, const bool *));
+    Loop(RWindow *win, int fps, void *data, int (*callbackMain)(void *), int (*callbackKey)(void *, const bool *));
 
     // destructor
     ~Loop() = default;

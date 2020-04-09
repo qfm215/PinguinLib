@@ -5,11 +5,11 @@ RM=		rm -f
 RMDIR=	rm -rf
 
 SRC=	Pixelarray.cpp \
-		Window.cpp \
+		RWindow.cpp \
 		Loop.cpp
 
 OBJ=	Pixelarray.o \
-		Window.o \
+		RWindow.o \
 		Loop.o
 
 NAME=	libPinguin.so
@@ -20,7 +20,7 @@ HEADER=	Pinguin.h
 all: install fclean
 
 compile:
-	g++ -c -fPIC $(SRC)
+	g++ -c -IX11 -fPIC $(SRC) -W -Wall -Wextra
 
 build: compile
 	g++ $(OBJ) -shared -o $(NAME)

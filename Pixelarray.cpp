@@ -23,7 +23,7 @@ Pixelarray::~Pixelarray()
 // fill all pixelarray with a t_color
 void Pixelarray::fill(t_color value)
 {
-    for (int i = 0; i < this->width * this->height; ++i)
+    for (unsigned int i = 0; i < this->width * this->height; ++i)
     {
         ((t_color *)this->pixels)[i] = value;
     }
@@ -32,7 +32,7 @@ void Pixelarray::fill(t_color value)
 // fill all pixelarray with an unsigned int
 void Pixelarray::fill(unsigned int value)
 {
-    for (int i = 0; i < this->width * this->height; ++i)
+    for (unsigned int i = 0; i < this->width * this->height; ++i)
     {
         ((unsigned int *)this->pixels)[i] = value;
     }

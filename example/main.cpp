@@ -2,7 +2,7 @@
 
 typedef struct s_data
 {
-    Window *win;
+    RWindow *win;
     Pixelarray *pix;
     int f;
 } t_data;
@@ -49,7 +49,7 @@ int loop(void *data)
 int main()
 {
     t_data d;
-    d.win = new Window(800, 600, "Sfml Works !");
+    d.win = new RWindow(800, 600, "Sfml Works !");
 
     d.pix = new Pixelarray(800, 600);
 
