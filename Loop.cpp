@@ -49,6 +49,7 @@ void Loop::keyLoop(int *state)
 void Loop::eventLoop()
 {
     sf::Event event;
+    sf::Time wait = sf::milliseconds(100);
 
     while (this->win->window->isOpen())
     {
@@ -61,6 +62,7 @@ void Loop::eventLoop()
                 mtx.unlock();
             }
         }
+        sf::sleep(wait);
     }
 }
 
