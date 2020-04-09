@@ -4,5 +4,8 @@ Ubuntu :    sudo apt install libsfml-dev
 Compiler et installer la librairie Pinguin:
     Exécuter 'sudo make install' à la racine du repo
 
+Désinstaller la librairie Pinguin:
+    Exécuter 'sudo make uninstall' à la racine du repo
+
 Compiler l'exemple :
     g++ -o {appname} main.cpp -lPinguin -lsfml-graphics -lsfml-window -lsfml-system -pthread
