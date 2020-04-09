@@ -17,23 +17,23 @@ void Loop::fillKeys(bool *keys)
 }
 
 // game loop handling the keyboard entries
-void Loop::keyLoop(int *ret, bool *end)
+void Loop::keyLoop(int *state)
 {
     bool *keys = new bool[sf::Keyboard::Return + 1];
-    int key_ret = *ret;
+    int key_ret = *state;
     sf::Time wait = sf::milliseconds(100);
 
-    while (!(*end))
+    while (this->win->window->isOpen())
     {
         this->fillKeys(keys);
 
         mtx.lock();
-        key_ret = this->callbackKey(data, keys);
+        key_ret = this->callbackKey(this->data, keys);
         mtx.unlock();
         if (key_ret != CONTINUE)
         {
             mtx.lock();
-            *ret = key_ret;
+            *state = key_ret;
             mtx.unlock();
             break;
         }
@@ -41,33 +41,46 @@ void Loop::keyLoop(int *ret, bool *end)
     }
     delete keys;
     mtx.lock();
-    *end = true;
+    this->win->window->close();
     mtx.unlock();
 }
 
-// main game loop
-void Loop::mainLoop(int *ret, bool *end)
+// event game loop
+void Loop::eventLoop()
 {
-    sf::Clock clock;
     sf::Event event;
-    int main_ret = *ret;
-    sf::Time timeBetweenFrame = sf::microseconds(1000000 / this->fps);
-    sf::Time wait;
 
-    while (!(*end) && this->win->window->isOpen())
+    while (this->win->window->isOpen())
     {
         while (this->win->window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
+                mtx.lock();
                 this->win->window->close();
+                mtx.unlock();
+            }
         }
+    }
+}
+
+// main game loop
+void Loop::mainLoop(int *state)
+{
+    sf::Clock clock;
+    int main_ret = *state;
+    sf::Time timeBetweenFrame = sf::microseconds(1000000 / this->fps);
+    sf::Time wait;
+
+    while (this->win->window->isOpen())
+    {
         mtx.lock();
-        main_ret = this->callbackMain(data);
+        main_ret = this->callbackMain(this->data);
         mtx.unlock();
         if (main_ret != CONTINUE)
         {
             mtx.lock();
-            *ret = main_ret;
+            *state = main_ret;
             mtx.unlock();
             break;
         }
@@ -77,21 +90,22 @@ void Loop::mainLoop(int *ret, bool *end)
         clock.restart();
     }
     mtx.lock();
-    *end = true;
+    this->win->window->close();
     mtx.unlock();
 }
 
 // display loop calling at each frame a function created by the user
 int Loop::run()
 {
-    int ret = CONTINUE;
-    bool end = false;
+    int state = CONTINUE;
 
-    std::thread keyThread(&Loop::keyLoop, this, &ret, &end);
-    std::thread mainThread(&Loop::mainLoop, this, &ret, &end);
+    std::thread keyThread(&Loop::keyLoop, this, &state);
+    std::thread eventThread(&Loop::eventLoop, this);
+    std::thread mainThread(&Loop::mainLoop, this, &state);
 
-    mainThread.join();
     keyThread.join();
+    eventThread.join();
+    mainThread.join();
 
-    return (ret);
+    return (state);
 }

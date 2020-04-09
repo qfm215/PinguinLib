@@ -104,8 +104,11 @@ private:
 
     // get the state of keyboard inputs and store it into array
     void fillKeys(bool *keys);
-    void mainLoop(int *ret, bool *end);
-    void keyLoop(int *ret, bool *end);
+
+    // threaded loop functions
+    void keyLoop(int *ret);
+    void eventLoop();
+    void mainLoop(int *ret);
 
 public:
     // constructor
