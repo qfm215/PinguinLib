@@ -43,17 +43,29 @@ void Pixelarray::setPixel(t_position pos, t_color value)
 {
     ((t_color *)this->pixels)[pos.y * this->width + pos.x] = value;
 }
+void Pixelarray::setPixel(unsigned int x, unsigned int y, t_color value)
+{
+    ((t_color *)this->pixels)[y * this->width + x] = value;
+}
 
 // set color of a pixel at a 2d position in the array from unsigned int
 void Pixelarray::setPixel(t_position pos, unsigned int value)
 {
     ((unsigned int *)this->pixels)[pos.y * this->width + pos.x] = value;
 }
+void Pixelarray::setPixel(unsigned int x, unsigned int y, unsigned int value)
+{
+    ((unsigned int *)this->pixels)[y * this->width + x] = value;
+}
 
 // get the color of one pixel in the array
 t_color Pixelarray::getPixel(t_position pos)
 {
     return (((t_color *)this->pixels)[pos.y * this->width + pos.x]);
+}
+t_color Pixelarray::getPixel(unsigned int x, unsigned int y)
+{
+    return (((t_color *)this->pixels)[y * this->width + x]);
 }
 
 // call this function before pushing the pixelarray to the window

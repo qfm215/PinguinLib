@@ -53,12 +53,15 @@ public:
 
     // set color of a pixel at a 2d position in the array from t_color structure
     void setPixel(t_position pos, t_color value);
+    void setPixel(unsigned int x, unsigned int y, t_color value);
 
     // set color of a pixel at a 2d position in the array from unsigned int
     void setPixel(t_position pos, unsigned int value);
+    void setPixel(unsigned int x, unsigned int y, unsigned int value);
 
     // get the color of one pixel in the array
     t_color getPixel(t_position pos);
+    t_color getPixel(unsigned int x, unsigned int y);
 
     // call this function before pushing the pixelarray to the window
     void update();
