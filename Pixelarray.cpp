@@ -20,6 +20,24 @@ Pixelarray::~Pixelarray()
     delete this->sprite;
 }
 
+// fill all pixelarray with a t_color
+void Pixelarray::fill(t_color value)
+{
+    for (int i = 0; i < this->width * this->height; ++i)
+    {
+        ((t_color *)this->pixels)[i] = value;
+    }
+}
+
+// fill all pixelarray with an unsigned int
+void Pixelarray::fill(unsigned int value)
+{
+    for (int i = 0; i < this->width * this->height; ++i)
+    {
+        ((unsigned int *)this->pixels)[i] = value;
+    }
+}
+
 // set color of a pixel at a 2d position in the array from t_color structure
 void Pixelarray::setPixel(t_position pos, t_color value)
 {

@@ -24,6 +24,9 @@ int loop(void *data)
     color.b = 0;
     color.a = 255;
     t_position pos;
+
+    d->pix->fill(BLACK);
+
     pos.x = 0;
     while (pos.x < 800)
     {
@@ -32,10 +35,6 @@ int loop(void *data)
         {
             if (pos.x > d->f && pos.x < d->f + 50)
                 d->pix->setPixel(pos, color);
-            else
-                d->pix->setPixel(pos, 0);
-            if (d->f > 100 && pos.x < 20 && pos.y < 20)
-                d->pix->setPixel(pos, 0);
             pos.y += 1;
         }
         pos.x += 1;

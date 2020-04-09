@@ -10,6 +10,9 @@
 # define EXIT_ON_SUCCESS 1
 # define EXIT_ON_ERROR 2
 
+# define BLACK 0
+# define WHITE 0xFFFFFFFF
+
 // 2d position structure
 typedef struct s_position
 {
@@ -41,6 +44,12 @@ public:
 
     // destructor
     ~Pixelarray();
+
+    // fill all pixelarray with a t_color
+    void fill(t_color value);
+
+    // fill all pixelarray with a unsigned int
+    void fill(unsigned int value);
 
     // set color of a pixel at a 2d position in the array from t_color structure
     void setPixel(t_position pos, t_color value);
