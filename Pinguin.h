@@ -2,10 +2,11 @@
 # define PINGUIN_HPP_
 
 # include <iostream>
+# include <cstring>
 # include <thread>
 # include <mutex>
 # include <SFML/Graphics.hpp>
-#include <X11/Xlib.h>
+# include <X11/Xlib.h>
 
 # define CONTINUE 0
 # define EXIT_ON_SUCCESS 1
@@ -40,8 +41,9 @@ public:
     sf::Texture *texture;
     sf::Sprite *sprite;
 
-    // constructor
+    // constructors
     Pixelarray(int width, int height);
+    Pixelarray(const std::string filename);
 
     // destructor
     ~Pixelarray();

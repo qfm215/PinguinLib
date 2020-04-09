@@ -25,6 +25,9 @@ int loop(void *data)
     color.a = 255;
     t_position pos;
 
+    d->win->display(*d->pix);
+
+    return CONTINUE;
     d->pix->fill(BLACK);
 
     pos.x = 0;
@@ -49,9 +52,9 @@ int loop(void *data)
 int main()
 {
     t_data d;
-    d.win = new RWindow(800, 600, "Sfml Works !");
+    d.win = new RWindow(1920, 1080, "Sfml Works !");
 
-    d.pix = new Pixelarray(800, 600);
+    d.pix = new Pixelarray("test.jpg");
 
     d.f = 0;
 

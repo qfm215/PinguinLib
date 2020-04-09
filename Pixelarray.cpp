@@ -1,6 +1,6 @@
 #include "Pinguin.h"
 
-// constructor
+// constructors
 Pixelarray::Pixelarray(int width, int height)
 {
     this->width = width;
@@ -9,6 +9,21 @@ Pixelarray::Pixelarray(int width, int height)
 
     this->texture = new sf::Texture();
     this->texture->create(width, height);
+    this->sprite = new sf::Sprite(*this->texture);
+}
+Pixelarray::Pixelarray(const std::string filename)
+{
+    sf::Image image;
+    image.loadFromFile(filename);
+    this->width = image.getSize().x;
+    this->height = image.getSize().y;
+    
+    unsigned int total_size = this->width * this->height * 4;
+    this->pixels = new sf::Uint8[total_size];
+    std::memcpy(this->pixels, image.getPixelsPtr(), total_size);
+
+    this->texture = new sf::Texture();
+    this->texture->create(this->width, this->height);
     this->sprite = new sf::Sprite(*this->texture);
 }
 
