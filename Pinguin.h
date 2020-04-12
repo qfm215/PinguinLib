@@ -3,10 +3,7 @@
 
 # include <iostream>
 # include <cstring>
-# include <thread>
-# include <mutex>
 # include <SFML/Graphics.hpp>
-# include <X11/Xlib.h>
 
 # define CONTINUE 0
 # define EXIT_ON_SUCCESS 1
@@ -74,7 +71,7 @@ public:
 };
 
 // class creating a sfml window
-class RWindow
+class Window
 {
 public:
     sf::RenderWindow *window;
@@ -82,10 +79,10 @@ public:
     unsigned int height;
 
     // constructor
-    RWindow(int width, int height, const char *title);
+    Window(int width, int height, const char *title);
 
     // destructor
-    ~RWindow();
+    ~Window();
 
     // return true if the window is open or false if it is not
     bool isOpen() const;
@@ -104,22 +101,18 @@ public:
 class Loop
 {
 private:
-    RWindow *win;
+    Window *win;
     int fps;
     void *data;
     int (*callbackMain)(void *);
     int (*callbackKey)(void *, const bool *keys);
 
-    // get the state of keyboard inputs and store it into array
-    void fillKeys(bool *keys);
-
-    // threaded loop functions
-    void keyLoop(int *ret);
-    void mainLoop(int *ret);
+    // main loop function
+    int mainLoop();
 
 public:
     // constructor
-    Loop(RWindow *win, int fps, void *data, int (*callbackMain)(void *), int (*callbackKey)(void *, const bool *));
+    Loop(Window *win, int fps, void *data, int (*callbackMain)(void *));
 
     // destructor
     ~Loop() = default;

@@ -1,35 +1,35 @@
 #include "Pinguin.h"
 
 // constructor
-RWindow::RWindow(int width, int height, const char *title)
+Window::Window(int width, int height, const char *title)
 {
-    XInitThreads();
+//    XInitThreads();
     this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);
     this->width = width;
     this->height = height;
 }
 
 // destructor
-RWindow::~RWindow()
+Window::~Window()
 {
     this->window->close();
     delete this->window;
 }
 
 // return true if the window is open or false if it is not
-bool RWindow::isOpen() const
+bool Window::isOpen() const
 {
     return this->window->isOpen();
 }
 
 // close the render window
-void RWindow::close()
+void Window::close()
 {
     this->window->close();
 }
 
 // set the pixels of the window from the color values of a pixelarray (reference)
-void RWindow::display(Pixelarray &pix)
+void Window::display(Pixelarray &pix)
 {
     pix.update();
     this->window->clear();
@@ -38,7 +38,7 @@ void RWindow::display(Pixelarray &pix)
 }
 
 // set the pixels of the window from the color values of a pixelarray (pointer)
-void RWindow::display(Pixelarray *pix)
+void Window::display(Pixelarray *pix)
 {
     pix->update();
     this->window->clear();

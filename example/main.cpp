@@ -2,15 +2,15 @@
 
 typedef struct s_data
 {
-    RWindow *win;
+    Window *win;
     Pixelarray *pix;
     Pixelarray *bg;
     int f;
 } t_data;
 
-int key(void *data, const bool *keys)
+int key(t_data *data)
 {
-    if (keys[sf::Keyboard::A])
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         printf("key A pressed\n");
     return (CONTINUE);
 }
@@ -18,6 +18,8 @@ int key(void *data, const bool *keys)
 int loop(void *data)
 {
     t_data *d = (t_data*)data;
+
+    key(d);
 
     t_color color;
     color.r = 0;
@@ -45,14 +47,14 @@ int loop(void *data)
 int main()
 {
     t_data d;
-    d.win = new RWindow(1920, 1080, "Sfml Works !");
+    d.win = new Window(1920, 1080, "Sfml Works !");
 
     d.bg = new Pixelarray("test.jpg");
 
     d.pix = new Pixelarray(1920, 1080);
     d.f = 0;
 
-    Loop l(d.win, 30, &d, &loop, &key);
+    Loop l(d.win, 30, &d, &loop);
     int ret = l.run();
 
     return 0;

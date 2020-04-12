@@ -20,7 +20,7 @@ HEADER=	Pinguin.h
 all: install fclean
 
 compile:
-	g++ -c -IX11 -fPIC $(SRC) -W -Wall -Wextra
+	g++ -c -fPIC $(SRC) -W -Wall -Wextra
 
 build: compile
 	g++ $(OBJ) -shared -o $(NAME)
