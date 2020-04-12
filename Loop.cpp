@@ -21,7 +21,7 @@ void Loop::keyLoop(int *state)
 {
     bool *keys = new bool[sf::Keyboard::Return + 1];
     int key_ret = *state;
-    sf::Time wait = sf::milliseconds(100);
+    sf::Time wait = sf::milliseconds(20);
 
     while (this->win->window->isOpen())
     {
@@ -53,6 +53,13 @@ void Loop::mainLoop(int *state)
 
     while (this->win->window->isOpen())
     {
+        while (this->win->window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                this->win->window->close();
+            }
+        }
         mtx.lock();
         main_ret = this->callbackMain(this->data);
         mtx.unlock();
@@ -68,13 +75,6 @@ void Loop::mainLoop(int *state)
         if (wait > sf::Time::Zero)
             sf::sleep(wait);
         clock.restart();
-        while (this->win->window->pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                this->win->window->close();
-            }
-        }
     }
 }
 
