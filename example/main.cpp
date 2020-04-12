@@ -49,7 +49,7 @@ int main()
     t_data d;
     d.win = new Window(1920, 1080, "Sfml Works !");
 
-    d.bg = new Pixelarray("test.jpg");
+    d.bg = new Pixelarray("bad.png");
 
     d.pix = new Pixelarray(1920, 1080);
     d.f = 0;
@@ -57,5 +57,9 @@ int main()
     Loop l(d.win, 30, &d, &loop);
     int ret = l.run();
 
+    delete d.win;
+    delete d.pix;
+    delete d.pix;
+    
     return 0;
 }
