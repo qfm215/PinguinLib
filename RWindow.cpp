@@ -31,9 +31,8 @@ void RWindow::close()
 // set the pixels of the window from the color values of a pixelarray (reference)
 void RWindow::display(Pixelarray &pix)
 {
-    std::thread t(&Pixelarray::update, &pix);
+    pix.update();
     this->window->clear();
-    t.join();
     this->window->draw(*pix.sprite);
     this->window->display();
 }
@@ -41,9 +40,8 @@ void RWindow::display(Pixelarray &pix)
 // set the pixels of the window from the color values of a pixelarray (pointer)
 void RWindow::display(Pixelarray *pix)
 {
-    std::thread t(&Pixelarray::update, pix);
+    pix->update();
     this->window->clear();
-    t.join();
     this->window->draw(*pix->sprite);
     this->window->display();
 }

@@ -21,7 +21,7 @@ void Loop::keyLoop(int *state)
 {
     bool *keys = new bool[sf::Keyboard::Return + 1];
     int key_ret = *state;
-    sf::Time wait = sf::milliseconds(20);
+    sf::Time wait = sf::milliseconds(10);
 
     while (this->win->window->isOpen())
     {

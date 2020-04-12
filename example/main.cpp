@@ -37,7 +37,7 @@ int loop(void *data)
     }
 
     d->f = (d->f + 5) % (d->pix->width - 100);
-    d->win->display(*d->pix);
+    d->win->display(d->pix);
 
     return CONTINUE;
 }
