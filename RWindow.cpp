@@ -22,6 +22,12 @@ bool RWindow::isOpen() const
     return this->window->isOpen();
 }
 
+// close the render window
+void RWindow::close()
+{
+    this->window->close();
+}
+
 // set the pixels of the window from the color values of a pixelarray (reference)
 void RWindow::display(Pixelarray &pix)
 {

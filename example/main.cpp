@@ -4,6 +4,7 @@ typedef struct s_data
 {
     RWindow *win;
     Pixelarray *pix;
+    Pixelarray *bg;
     int f;
 } t_data;
 
@@ -23,27 +24,19 @@ int loop(void *data)
     color.g = 255;
     color.b = 0;
     color.a = 255;
-    t_position pos;
 
-    d->win->display(*d->pix);
+    d->pix->fill(d->bg);
 
-    return CONTINUE;
-    d->pix->fill(BLACK);
-
-    pos.x = 0;
-    while (pos.x < 800)
+    for (int x = 0; x < d->pix->width; ++x)
     {
-        pos.y = 0;
-        while (pos.y < 600)
+        for (int y = 0; y < d->pix->height; ++y)
         {
-            if (pos.x > d->f && pos.x < d->f + 50)
-                d->pix->setPixel(pos, color);
-            pos.y += 1;
+            if (x > d->f && x < d->f + 50 && d->pix->getPixel(x, y) == BLACK)
+                d->pix->setPixel(x, y, color);
         }
-        pos.x += 1;
     }
 
-    d->f = (d->f + 1) % (d->pix->width - 100);
+    d->f = (d->f + 5) % (d->pix->width - 100);
     d->win->display(*d->pix);
 
     return CONTINUE;
@@ -54,11 +47,12 @@ int main()
     t_data d;
     d.win = new RWindow(1920, 1080, "Sfml Works !");
 
-    d.pix = new Pixelarray("test.jpg");
+    d.bg = new Pixelarray("test.jpg");
 
+    d.pix = new Pixelarray(1920, 1080);
     d.f = 0;
 
-    Loop l(d.win, 40, &d, &loop, &key);
+    Loop l(d.win, 30, &d, &loop, &key);
     int ret = l.run();
 
     return 0;

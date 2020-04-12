@@ -26,7 +26,6 @@ void Loop::keyLoop(int *state)
     while (this->win->window->isOpen())
     {
         this->fillKeys(keys);
-
         mtx.lock();
         key_ret = this->callbackKey(this->data, keys);
         mtx.unlock();
@@ -34,45 +33,23 @@ void Loop::keyLoop(int *state)
         {
             mtx.lock();
             *state = key_ret;
+            this->win->window->close();
             mtx.unlock();
             break;
         }
         sf::sleep(wait);
     }
     delete keys;
-    mtx.lock();
-    this->win->window->close();
-    mtx.unlock();
-}
-
-// event game loop
-void Loop::eventLoop()
-{
-    sf::Event event;
-    sf::Time wait = sf::milliseconds(100);
-
-    while (this->win->window->isOpen())
-    {
-        while (this->win->window->pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                mtx.lock();
-                this->win->window->close();
-                mtx.unlock();
-            }
-        }
-        sf::sleep(wait);
-    }
 }
 
 // main game loop
 void Loop::mainLoop(int *state)
 {
-    sf::Clock clock;
+    sf::Event event;
     int main_ret = *state;
     sf::Time timeBetweenFrame = sf::microseconds(1000000 / this->fps);
     sf::Time wait;
+    sf::Clock clock;
 
     while (this->win->window->isOpen())
     {
@@ -83,6 +60,7 @@ void Loop::mainLoop(int *state)
         {
             mtx.lock();
             *state = main_ret;
+            this->win->window->close();
             mtx.unlock();
             break;
         }
@@ -90,10 +68,14 @@ void Loop::mainLoop(int *state)
         if (wait > sf::Time::Zero)
             sf::sleep(wait);
         clock.restart();
+        while (this->win->window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                this->win->window->close();
+            }
+        }
     }
-    mtx.lock();
-    this->win->window->close();
-    mtx.unlock();
 }
 
 // display loop calling at each frame a function created by the user
@@ -102,11 +84,9 @@ int Loop::run()
     int state = CONTINUE;
 
     std::thread keyThread(&Loop::keyLoop, this, &state);
-    std::thread eventThread(&Loop::eventLoop, this);
     std::thread mainThread(&Loop::mainLoop, this, &state);
 
     keyThread.join();
-    eventThread.join();
     mainThread.join();
 
     return (state);

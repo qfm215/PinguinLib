@@ -12,7 +12,7 @@
 # define EXIT_ON_SUCCESS 1
 # define EXIT_ON_ERROR 2
 
-# define BLACK 0
+# define BLACK 0xFF000000
 # define WHITE 0xFFFFFFFF
 
 // 2d position structure
@@ -54,6 +54,9 @@ public:
     // fill all pixelarray with a unsigned int
     void fill(unsigned int value);
 
+    // fill pixelarray with another pixelarray starting from the upper left corner
+    void fill(Pixelarray *pix);
+
     // set color of a pixel at a 2d position in the array from t_color structure
     void setPixel(t_position pos, t_color value);
     void setPixel(unsigned int x, unsigned int y, t_color value);
@@ -63,8 +66,8 @@ public:
     void setPixel(unsigned int x, unsigned int y, unsigned int value);
 
     // get the color of one pixel in the array
-    t_color getPixel(t_position pos);
-    t_color getPixel(unsigned int x, unsigned int y);
+    unsigned int getPixel(t_position pos);
+    unsigned int getPixel(unsigned int x, unsigned int y);
 
     // call this function before pushing the pixelarray to the window
     void update();
@@ -86,6 +89,9 @@ public:
 
     // return true if the window is open or false if it is not
     bool isOpen() const;
+
+    // close the render window
+    void close();
 
     // set the pixels of the window from the color values of a pixelarray (reference)
     void display(Pixelarray &pix);
@@ -109,7 +115,6 @@ private:
 
     // threaded loop functions
     void keyLoop(int *ret);
-    void eventLoop();
     void mainLoop(int *ret);
 
 public:

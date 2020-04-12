@@ -53,34 +53,56 @@ void Pixelarray::fill(unsigned int value)
     }
 }
 
+// fill pixelarray with another pixelarray starting from the upper left corner
+void Pixelarray::fill(Pixelarray *pix)
+{
+    for (unsigned int x = 0; x < this->width; ++x)
+    {
+        for (unsigned int y = 0; y < this->height; ++y)
+        {
+            this->setPixel(x, y, pix->getPixel(x, y));
+        }
+    }
+}
+
 // set color of a pixel at a 2d position in the array from t_color structure
 void Pixelarray::setPixel(t_position pos, t_color value)
 {
-    ((t_color *)this->pixels)[pos.y * this->width + pos.x] = value;
+    if (pos.x < this->width && pos.y < this->height)
+        ((t_color *)this->pixels)[pos.y * this->width + pos.x] = value;
 }
 void Pixelarray::setPixel(unsigned int x, unsigned int y, t_color value)
 {
-    ((t_color *)this->pixels)[y * this->width + x] = value;
+    if (x < this->width && y < this->height)
+        ((t_color *)this->pixels)[y * this->width + x] = value;
 }
 
 // set color of a pixel at a 2d position in the array from unsigned int
 void Pixelarray::setPixel(t_position pos, unsigned int value)
 {
-    ((unsigned int *)this->pixels)[pos.y * this->width + pos.x] = value;
+    if (pos.x < this->width && pos.y < this->height)
+        ((unsigned int *)this->pixels)[pos.y * this->width + pos.x] = value;
 }
 void Pixelarray::setPixel(unsigned int x, unsigned int y, unsigned int value)
 {
-    ((unsigned int *)this->pixels)[y * this->width + x] = value;
+    if (x < this->width && y < this->height)
+        ((unsigned int *)this->pixels)[y * this->width + x] = value;
 }
 
 // get the color of one pixel in the array
-t_color Pixelarray::getPixel(t_position pos)
+unsigned int Pixelarray::getPixel(t_position pos)
 {
-    return (((t_color *)this->pixels)[pos.y * this->width + pos.x]);
+    if (pos.x < this->width && pos.y < this->height)
+        return (((unsigned int *)this->pixels)[pos.y * this->width + pos.x]);
+    else
+        return BLACK;
 }
-t_color Pixelarray::getPixel(unsigned int x, unsigned int y)
+unsigned int Pixelarray::getPixel(unsigned int x, unsigned int y)
 {
-    return (((t_color *)this->pixels)[y * this->width + x]);
+    if (x < this->width && y < this->height)
+        return (((unsigned int *)this->pixels)[y * this->width + x]);
+    else
+        return BLACK;
 }
 
 // call this function before pushing the pixelarray to the window
