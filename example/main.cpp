@@ -12,6 +12,8 @@ int key(t_data *data)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         printf("key A pressed\n");
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        return (EXIT_ON_SUCCESS);
     return (CONTINUE);
 }
 
@@ -19,7 +21,7 @@ int loop(void *data)
 {
     t_data *d = (t_data*)data;
 
-    key(d);
+    int state = key(d);
 
     t_color color;
     color.r = 0;
@@ -41,7 +43,7 @@ int loop(void *data)
     d->f = (d->f + 5) % (d->pix->width - 100);
     d->win->display(d->pix);
 
-    return CONTINUE;
+    return state;
 }
 
 int main()
@@ -49,7 +51,7 @@ int main()
     t_data d;
     d.win = new Window(1920, 1080, "Sfml Works !");
 
-    d.bg = new Pixelarray("bad.png");
+    d.bg = new Pixelarray("test.jpg");
 
     d.pix = new Pixelarray(1920, 1080);
     d.f = 0;
@@ -58,7 +60,7 @@ int main()
     int ret = l.run();
 
     delete d.win;
-    delete d.pix;
+    delete d.bg;
     delete d.pix;
     
     return 0;
