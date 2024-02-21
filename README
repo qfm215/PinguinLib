@@ -1,11 +1,11 @@
-Installer la version 2.5 de la SFML:
+Install 2.5 version of SFML:
 Ubuntu :    sudo apt install libsfml-dev
 
-Compiler et installer la librairie Pinguin:
+Compile and install Pinguin library:
     Exécuter 'sudo make install' à la racine du repo
 
-Désinstaller la librairie Pinguin:
+Uninstall Pinguin library:
     Exécuter 'sudo make uninstall' à la racine du repo
 
-Compiler l'exemple :
+Compile example :
     g++ -o {appname} main.cpp -lPinguin -lsfml-graphics -lsfml-window -lsfml-system -pthread
